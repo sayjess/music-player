@@ -60,8 +60,8 @@ playButton.addEventListener('click',
 
 //Update DOM
 function loadSong (song) {
-    title.textContent = song.displayName;
-    artist.textContent = song.artist;
+    title.innerText = song.displayName;
+    artist.innerText = song.artist;
     music.src = `music/${song.name}.mp3`;
     albumImage.src = `img/${song.name}.jpg`;
 }
@@ -110,7 +110,7 @@ function updateProgressBar(e){
         }
         //delay switching of duration to avoid NaN
         if (durationSeconds){ //if durationseconds have a value, or you can use durationminutes
-            durationOfSong.textContent = `${durationMinutes}:${durationSeconds}`
+            durationOfSong.innerText = `${durationMinutes}:${durationSeconds}`
         }
         //calculate display for currentTime
         const currentTimeMinutes = Math.floor(currentTime / 60);
@@ -120,14 +120,22 @@ function updateProgressBar(e){
         }
         //delay switching of duration to avoid NaN
         if (currentTimeSeconds){
-            currentTimeOfSong.textContent = `${currentTimeMinutes}:${currentTimeSeconds}`
+            currentTimeOfSong.innerText = `${currentTimeMinutes}:${currentTimeSeconds}`
         }
     }
 }
-function duration(){
-    
+function setProgressBar(e){
+    const width = this.clientWidth;
+    const clickX = e.offsetX;
+    const {duration} = music;
+    const progressClick = (clickX/width) * duration;
+    progress.style.width = `${progressClick}%`;
+    music.currentTime = progressClick;
+
 }
 
 nextButton.addEventListener('click', nextButtonClick)
 prevButton.addEventListener('click', prevButtonClick)
 music.addEventListener('timeupdate', updateProgressBar);
+progressContainer.addEventListener('click', setProgressBar);
+music.addEventListener('ended', nextButtonClick);
